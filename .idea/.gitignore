@@ -1,11 +1,12 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-/IdeaProjects/Sudoku/.idea
-/IdeaProjects/Sudoku/.out
-/IdeaProjects/Sudoku/Sudoku.iml
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+# IntellijIdea files
+*.iml
+.idea
+out
