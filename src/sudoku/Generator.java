@@ -6,6 +6,18 @@ public class Generator {
     private int[] numbers;
     private final int sizeField = 9;
 
+    public int[][] getField() {
+        return field;
+    }
+
+    public void setFieldValue(int i, int j, int value) {
+        field[i][j] = value;
+    }
+
+    public int getSizeField() {
+        return sizeField;
+    }
+
     /* выделяем память игровому полю и
     * массиву с числами, которым будем заполнять поле */
     public Generator() {

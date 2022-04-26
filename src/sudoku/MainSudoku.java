@@ -11,7 +11,7 @@ public class MainSudoku {
 
         System.out.print("\n");
 
-        object.mixField(10);
+        object.mixField(20);
         object.showField();
 
     }
