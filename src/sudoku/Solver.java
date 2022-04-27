@@ -43,4 +43,25 @@ public class Solver {
         return true; //значения нет, можно использовать
     }
 
+    public boolean solveSudoku(int[][] field) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                if(field[i][j] == 0) {
+                    for (int number = 1; number < 10; number++) {
+                        if(isValueValid(field, i, j, number)) {
+                            field[i][j] = number;
+                            if(solveSudoku(field)) {
+                                return true;
+                            } else {
+                                field[i][j] = 0;
+                            }
+                        }
+                    }
+                   return false; //нет решений
+                }
+            }
+        }
+        return true;
+    }
+    
 }
