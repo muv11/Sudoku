@@ -3,6 +3,13 @@ package sudoku;
 public class Solver {
 
     private final int FIELD_SIZE = new Generator().getSizeField();
+    private int[][] solvedSudoku;
+    private int[][] solvedSudokuReverse;
+
+    public Solver() {
+        solvedSudoku = new int[FIELD_SIZE][FIELD_SIZE];
+        solvedSudokuReverse = new int[FIELD_SIZE][FIELD_SIZE];
+    }
 
     public boolean isValueInRow(int[][] field, int row, int value) {
         for (int j = 0; j < FIELD_SIZE; j++) {
@@ -26,7 +33,7 @@ public class Solver {
         int blockFirstRow = row - row % 3; //значения для нахождения расположения
         int blockFirstColumn = column - column % 3; //первого элемента блока
         for (int i = blockFirstRow; i < blockFirstRow + 3; i++) {
-            for (int j = blockFirstColumn; j < blockFirstColumn; j++) {
+            for (int j = blockFirstColumn; j < blockFirstColumn + 3; j++) {
                 if(field[i][j] == value) {
                     return true; //такое значение уже есть в блоке
                 }
@@ -36,24 +43,23 @@ public class Solver {
     }
 
     public boolean isValueValid(int[][] field, int row, int column, int value) {
-        if(isValueInRow(field, row, value) || isValueInColumn(field, column, value)
-            || isValueInBlock(field, row, column, value)) {
-            return false; //значение уже имеется, потому недопустимо
-        }
-        return true; //значения нет, можно использовать
+        return !isValueInRow(field, row, value) && !isValueInColumn(field, column, value)
+                && !isValueInBlock(field, row, column, value);
+        //true, если такое значение иожно использовать; false, если такое значение нельзя использовать
     }
 
     public boolean solveSudoku(int[][] field) {
+        solvedSudoku = field;
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
-                if(field[i][j] == 0) {
+                if(solvedSudoku[i][j] == 0) {
                     for (int number = 1; number < 10; number++) {
-                        if(isValueValid(field, i, j, number)) {
-                            field[i][j] = number;
-                            if(solveSudoku(field)) {
-                                return true;
+                        if(isValueValid(solvedSudoku, i, j, number)) {
+                            solvedSudoku[i][j] = number;
+                            if(solveSudoku(solvedSudoku)) {
+                                return true; //решена
                             } else {
-                                field[i][j] = 0;
+                                solvedSudoku[i][j] = 0;
                             }
                         }
                     }
@@ -61,7 +67,39 @@ public class Solver {
                 }
             }
         }
-        return true;
+        return true; //не нуждается в решении
     }
-    
+
+    public boolean solveSudokuReverse(int[][] field) {
+        solvedSudokuReverse = field;
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                if(solvedSudokuReverse[i][j] == 0) {
+                    for (int number = 9; number > 0; number--) {
+                        if(isValueValid(solvedSudokuReverse, i, j, number)) {
+                            solvedSudokuReverse[i][j] = number;
+                            if(solveSudokuReverse(solvedSudokuReverse)) {
+                                return true; //решена
+                            } else {
+                                solvedSudokuReverse[i][j] = 0;
+                            }
+                        }
+                    }
+                    return false; //нет решений
+                }
+            }
+        }
+        return true; //не нуждается в решении
+    }
+
+    public boolean isOneSolution(int[][] field) {
+        solveSudoku(field);
+        solveSudokuReverse(field);
+        return solvedSudoku == solvedSudokuReverse; //true одно решение
+    }
+
+    public int[][] getSolution() {
+        return solvedSudoku;
+    }
+
 }
