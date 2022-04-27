@@ -1,10 +1,12 @@
 package sudoku;
 
+//понятия: строка, стобец, поле/таблица (9*9), гориз./вертик. район (3 блока), блок (кусок таблицы 3*3)
+
 public class Generator {
 
     private int[][] field;
     private int[] numbers;
-    private final int sizeField = 9;
+    private final int FIELD_SIZE = 9;
 
     public int[][] getField() {
         return field;
@@ -15,27 +17,27 @@ public class Generator {
     }
 
     public int getSizeField() {
-        return sizeField;
+        return FIELD_SIZE;
     }
 
     /* выделяем память игровому полю и
     * массиву с числами, которым будем заполнять поле */
     public Generator() {
-        field = new int[sizeField][sizeField];
-        numbers = new int[sizeField];
+        field = new int[FIELD_SIZE][FIELD_SIZE];
+        numbers = new int[FIELD_SIZE];
     }
 
     //вывод массива чисел на экран
     public void showNumbersArr() {
-        for(int i=0; i<sizeField; i++) {
+        for(int i=0; i<FIELD_SIZE; i++) {
             System.out.print(numbers[i] + " ");
         }
     }
 
     //вывод игрового поля на экран
     public void showField() {
-        for(int i=0; i<sizeField; i++) {
-            for(int j=0; j<sizeField; j++) {
+        for(int i=0; i<FIELD_SIZE; i++) {
+            for(int j=0; j<FIELD_SIZE; j++) {
                 System.out.print(field[i][j] + " ");
             }
             System.out.print("\n");
@@ -44,7 +46,7 @@ public class Generator {
 
     //заполнение массива чисел от 1 до 9
     public void fillNumbersArr() {
-        for(int i=0; i<sizeField; i++) {
+        for(int i=0; i<FIELD_SIZE; i++) {
             numbers[i] = i+1;
         }
     }
@@ -62,15 +64,15 @@ public class Generator {
             tempArrEnd[i] = numbers[i];
         }
 
-        int[] tempArrBegin = new int[sizeField-lengthShift];
-        for(int i=0, k=lengthShift; i<sizeField-lengthShift; i++, k++) {
+        int[] tempArrBegin = new int[FIELD_SIZE-lengthShift];
+        for(int i=0, k=lengthShift; i<FIELD_SIZE-lengthShift; i++, k++) {
             tempArrBegin[i] = numbers[k];
         }
 
         for(int i=0; i<tempArrBegin.length; i++) {
             numbers[i] = tempArrBegin[i];
         }
-        for(int i=tempArrBegin.length, k=0; i<sizeField; i++, k++) {
+        for(int i=tempArrBegin.length, k=0; i<FIELD_SIZE; i++, k++) {
             numbers[i] = tempArrEnd[k];
         }
     }
@@ -84,8 +86,8 @@ public class Generator {
         fillNumbersArr();
         int counter = 0;
 
-        for(int i=0; i<sizeField; i++) {
-            for(int j=0; j<sizeField; j++) {
+        for(int i=0; i<FIELD_SIZE; i++) {
+            for(int j=0; j<FIELD_SIZE; j++) {
                 field[i][j] = numbers[j];
             }
 
@@ -104,8 +106,8 @@ public class Generator {
     * столбцы становятся строками и
     * строки столбцами */
     public void transposeField() {
-        for(int i=0; i<sizeField; i++) {
-            for(int j=i+1; j<sizeField; j++) {
+        for(int i=0; i<FIELD_SIZE; i++) {
+            for(int j=i+1; j<FIELD_SIZE; j++) {
                 int temp = field[i][j];
                 field[i][j] = field[j][i];
                 field[j][i] = temp;
@@ -139,7 +141,7 @@ public class Generator {
         int row1 = randomRowOrColumn(district);
         int row2 = randomRowOrColumn(district);
 
-        for(int j=0; j<sizeField; j++) {
+        for(int j=0; j<FIELD_SIZE; j++) {
             int temp = field[row1][j];
             field[row1][j] = field[row2][j];
             field[row2][j] = temp;
@@ -153,7 +155,7 @@ public class Generator {
         int column1 = randomRowOrColumn(district);
         int column2 = randomRowOrColumn(district);
 
-        for(int i=0; i<sizeField; i++) {
+        for(int i=0; i<FIELD_SIZE; i++) {
             int temp = field[i][column1];
             field[i][column1] = field[i][column2];
             field[i][column2] = temp;
@@ -188,7 +190,7 @@ public class Generator {
 
         int N = i1 + 3;
         for(int i=i1; i<N; i++, i1++, i2++) {
-            for(int j=0; j<sizeField; j++) {
+            for(int j=0; j<FIELD_SIZE; j++) {
                 int temp = field[i1][j];
                 field[i1][j] = field[i2][j];
                 field[i2][j] = temp;
@@ -210,7 +212,7 @@ public class Generator {
         int N = j1 + 3;
         final int J1 = j1;
         final int J2 = j2;
-        for(int i=0; i<sizeField; i++) {
+        for(int i=0; i<FIELD_SIZE; i++) {
             for (int j = j1; j < N; j++, j1++, j2++) {
                 int temp = field[i][j1];
                 field[i][j1] = field[i][j2];
