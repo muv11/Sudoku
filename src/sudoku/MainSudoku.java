@@ -18,13 +18,13 @@ public class MainSudoku {
 
     public static void main(String[] args) {
 
-        Generator object = new Generator(DifficultyLevels.Levels.MEDIUM);
+        /*Generator object = new Generator(DifficultyLevels.Levels.VERY_EASY);
         object.createBaseField();
         object.mixField(20);
         object.showField();
         System.out.print("\n");
         object.removeCells();
-        object.showField();
+        object.showField();*/
 
         /*Solver solver = new Solver();
         System.out.println(solver.isOneSolution(field));
@@ -33,6 +33,10 @@ public class MainSudoku {
         /*DifficultyLevels l = new DifficultyLevels();
         DifficultyLevels.chooseLevel(DifficultyLevels.Levels.EASY);
         System.out.println(l.getFreeCells());*/
+
+        App app = new App();
+        app.setText();
+        app.setStartScreen();
 
     }
 }

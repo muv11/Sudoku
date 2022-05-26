@@ -30,7 +30,7 @@ public class DifficultyLevels {
             min = 41;
             max = 50;
         }
-        if (LEVEL == VERY_EASY) {
+        if (LEVEL == HARD) {
             min = 51;
             max = 61;
         }

@@ -249,26 +249,46 @@ public class Generator {
         }
     }
 
+    private int randomI(int min, int max) {
+        int i = randomNumber(min, max); //выбираем случайную клетку
+        return i;
+    }
+
+    private int randomJ(int min, int max) {
+        int i = randomNumber(min, max); //выбираем случайную клетку
+        return i;
+    }
+
     public void removeCells() {
         int min = 0;
         int max = 8;
         DifficultyLevels.chooseLevel(LEVEL);
         int freeCells = new DifficultyLevels().getFreeCells();
+        System.out.println(freeCells);
+        int[][] tempField = new int[FIELD_SIZE][FIELD_SIZE];
+        tempField = field;
 
         for (int k = 0; k <= freeCells; ) {
-            int i = randomNumber(min, max); //выбираем случайную клетку
-            int j = randomNumber(min, max);
-            int x = field[i][j];
+            Solver s = new Solver();
+            int i = randomI(min, max);
+            int j = randomJ(min, max);
+            if (tempField[i][j] == 0) {
+                i = randomI(min, max);
+                j = randomJ(min, max);
+            }
+
+            int temp = field[i][j];
             field[i][j] = 0; //удаляем клетку
-            if (!new Solver().isOneSolution(field)) { //если решение не одно,
-                field[i][j] = x; //то возвращаем клетку
-            } else {
-                field[i][j] = 0;
+
+            if (s.isOneSolution(field)) {
                 k++;
+                tempField[i][j] = 0;
+            }
+            if (!s.isOneSolution(field)) {
+                field[i][j] = temp;
             }
         }
-
-
+        field = tempField;
     }
 
 
