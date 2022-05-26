@@ -18,20 +18,21 @@ public class MainSudoku {
 
     public static void main(String[] args) {
 
-        /*Generator object = new Generator();
+        Generator object = new Generator(DifficultyLevels.Levels.MEDIUM);
         object.createBaseField();
+        object.mixField(20);
         object.showField();
         System.out.print("\n");
-        object.mixField(20);
-        object.showField();*/
+        object.removeCells();
+        object.showField();
 
         /*Solver solver = new Solver();
         System.out.println(solver.isOneSolution(field));
         System.out.println(Arrays.deepToString(solver.getSolution()));*/
 
-        DifficultyLevels l = new DifficultyLevels();
+        /*DifficultyLevels l = new DifficultyLevels();
         DifficultyLevels.chooseLevel(DifficultyLevels.Levels.EASY);
-        System.out.println(l.getFreeCells());
+        System.out.println(l.getFreeCells());*/
 
     }
 }

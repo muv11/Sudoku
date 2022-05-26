@@ -2,7 +2,7 @@ package sudoku;
 
 public class Solver {
 
-    private final int FIELD_SIZE = new Generator().getSizeField();
+    private final int FIELD_SIZE = 9;
     private int[][] solvedSudoku;
     private int[][] solvedSudokuReverse;
 

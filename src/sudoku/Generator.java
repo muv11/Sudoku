@@ -5,8 +5,9 @@ package sudoku;
 public class Generator {
 
     private int[][] field;
-    private int[] numbers;
+    private final int[] numbers;
     private final int FIELD_SIZE = 9;
+    private final DifficultyLevels.Levels LEVEL;
 
     public int[][] getField() {
         return field;
@@ -22,7 +23,8 @@ public class Generator {
 
     /* выделяем память игровому полю и
     * массиву с числами, которым будем заполнять поле */
-    public Generator() {
+    public Generator(DifficultyLevels.Levels LEVEL) {
+        this.LEVEL = LEVEL;
         field = new int[FIELD_SIZE][FIELD_SIZE];
         numbers = new int[FIELD_SIZE];
     }
@@ -52,13 +54,13 @@ public class Generator {
     }
 
     //случайное число
-    public int randomNumber(int min, int max) {
+    private int randomNumber(int min, int max) {
         return (int) (Math.random() * (max - min + 1) + min);
     }
 
     /* сдвиг в массиве чисел влево на заданное число,
     * нужен для создания базового поля */
-    public void shiftLeft(int lengthShift) {
+    private void shiftLeft(int lengthShift) {
         int[] tempArrEnd = new int[lengthShift];
         for(int i=0; i<lengthShift; i++) {
             tempArrEnd[i] = numbers[i];
@@ -105,7 +107,7 @@ public class Generator {
     /* 1ый метод для перемешивания поля:
     * столбцы становятся строками и
     * строки столбцами */
-    public void transposeField() {
+    private void transposeField() {
         for(int i=0; i<FIELD_SIZE; i++) {
             for(int j=i+1; j<FIELD_SIZE; j++) {
                 int temp = field[i][j];
@@ -116,7 +118,7 @@ public class Generator {
     }
 
     //случайная строка или столбец; от 0 до 8 в зависимости от района
-    public int randomRowOrColumn(int district) {
+    private int randomRowOrColumn(int district) {
         int max = 8;
         int min = 0;
 
@@ -136,7 +138,7 @@ public class Generator {
 
     /* 2ой метод для перемешивания поля:
     * обмен строк внутри горизонтального района*/
-    public void swapRowsInDistrict() {
+    private void swapRowsInDistrict() {
         int district = randomNumber(1, 3); //номера районов, получаем случайный
         int row1 = randomRowOrColumn(district);
         int row2 = randomRowOrColumn(district);
@@ -150,7 +152,7 @@ public class Generator {
 
     /* 3ий метод для перемешивания поля:
      * обмен столбцов внутри вертикального района*/
-    public void swapColumnsInDistrict() {
+    private void swapColumnsInDistrict() {
         int district = randomNumber(1, 3); //номера районов, получаем случайный
         int column1 = randomRowOrColumn(district);
         int column2 = randomRowOrColumn(district);
@@ -163,7 +165,7 @@ public class Generator {
     }
 
     //с какой строки начинать обмен районов в зависимотси от них
-    public int checkDistrict(int district) {
+    private int checkDistrict(int district) {
         int p = -1;
         if(district == 1) {
             p = 0;
@@ -179,7 +181,7 @@ public class Generator {
 
     /* 4ый метод для перемешивания поля:
      * обмен горизонтальных районов*/
-    public void swapHorizontalDistricts() {
+    private void swapHorizontalDistricts() {
         final int district1 = randomNumber(1, 3);
         final int district2 = randomNumber(1, 3);
         int i1 = -1;
@@ -200,7 +202,7 @@ public class Generator {
 
     /* 5ый метод для перемешивания поля:
      * обмен вертикальных районов*/
-    public void swapVerticalDistricts() {
+    private void swapVerticalDistricts() {
         final int district1 = randomNumber(1, 3);
         final int district2 = randomNumber(1, 3);
         int j1 = -1;
@@ -246,5 +248,28 @@ public class Generator {
             }
         }
     }
+
+    public void removeCells() {
+        int min = 0;
+        int max = 8;
+        DifficultyLevels.chooseLevel(LEVEL);
+        int freeCells = new DifficultyLevels().getFreeCells();
+
+        for (int k = 0; k <= freeCells; ) {
+            int i = randomNumber(min, max); //выбираем случайную клетку
+            int j = randomNumber(min, max);
+            int x = field[i][j];
+            field[i][j] = 0; //удаляем клетку
+            if (!new Solver().isOneSolution(field)) { //если решение не одно,
+                field[i][j] = x; //то возвращаем клетку
+            } else {
+                field[i][j] = 0;
+                k++;
+            }
+        }
+
+
+    }
+
 
 }
