@@ -25,9 +25,13 @@ public class MainSudoku {
         object.mixField(20);
         object.showField();*/
 
-        Solver solver = new Solver();
+        /*Solver solver = new Solver();
         System.out.println(solver.isOneSolution(field));
-        System.out.println(Arrays.deepToString(solver.getSolution()));
+        System.out.println(Arrays.deepToString(solver.getSolution()));*/
+
+        DifficultyLevels l = new DifficultyLevels();
+        DifficultyLevels.chooseLevel(DifficultyLevels.Levels.EASY);
+        System.out.println(l.getFreeCells());
 
     }
 }
