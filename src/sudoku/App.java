@@ -7,12 +7,14 @@ import java.awt.event.ActionListener;
 
 public class App {
 
+    private final int FIELD_SIZE = 9;
     private Action action = new Action();
     private BoxLayout startLayout, levelsLayout;
     private JFrame frame;
     private JPanel startScreen, levelsScreen, game;
     private JTextField name, levelDiff;
     private Font headerFont, font, fontGame;
+    private JTextField[][] grid;
 
     private JButton play, exit, very_easy, easy, middle, hard, backStart, backLevels, answer;
 
@@ -21,11 +23,12 @@ public class App {
         startScreen = new JPanel();
         levelsScreen = new JPanel();
         game = new JPanel();
+        grid = new JTextField[FIELD_SIZE][FIELD_SIZE];
         startLayout = new BoxLayout(startScreen, BoxLayout.Y_AXIS);
         levelsLayout = new BoxLayout(levelsScreen, BoxLayout.Y_AXIS);
 
         frame.setVisible(true);
-        frame.setResizable(false);
+        //frame.setResizable(false);
         frame.getContentPane();
         frame.pack();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -151,12 +154,44 @@ public class App {
         backStart.addActionListener(action);
     }
 
-    public void setGame() {
+    public void setGame(Generator generator) {
         setGameButtons();
         game.setBackground(Color.WHITE);
+        game.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.SOUTH;
 
-        game.add(backLevels);
-        game.add(answer);
+        JPanel gridPanel = new JPanel();
+        GridLayout gridLayout = new GridLayout(FIELD_SIZE, FIELD_SIZE, 1, 1);
+        gridPanel.setLayout(gridLayout);
+
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                if (generator.getFieldEl(i, j) == 0) {
+                    grid[i][j] = new JTextField("");
+                } else {
+                    //grid[i][j].setText(String.valueOf(generator.getFieldEl(i, j)));
+                    grid[i][j] = new JTextField(String.valueOf(generator.getFieldEl(i, j)));
+                    grid[i][j].setEditable(false);
+                }
+                grid[i][j].setAlignmentX(10f);
+                grid[i][j].setFont(fontGame);
+                grid[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+                gridPanel.add(grid[i][j]);
+
+            }
+        }
+
+        game.add(gridPanel);
+        gbc.weighty = 0;
+        game.add(answer, gbc);
+        game.add(backLevels, gbc);
+        game.revalidate();
+        game.repaint();
     }
 
     public void setGameButtons() {
@@ -197,7 +232,37 @@ public class App {
                 levelsScreen.repaint();
             }
             if (e.getSource() == very_easy) {
+                Generator generator = new Generator(DifficultyLevels.Levels.VERY_EASY);
+                generator.generateSudoku();
                 frame.remove(levelsScreen);
+                setGame(generator);
+                frame.add(game);
+                game.revalidate();
+                game.repaint();
+            }
+            if (e.getSource() == easy) {
+                Generator generator = new Generator(DifficultyLevels.Levels.EASY);
+                generator.generateSudoku();
+                frame.remove(levelsScreen);
+                setGame(generator);
+                frame.add(game);
+                game.revalidate();
+                game.repaint();
+            }
+            if (e.getSource() == middle) {
+                Generator generator = new Generator(DifficultyLevels.Levels.MEDIUM);
+                generator.generateSudoku();
+                frame.remove(levelsScreen);
+                setGame(generator);
+                frame.add(game);
+                game.revalidate();
+                game.repaint();
+            }
+            if (e.getSource() == hard) {
+                Generator generator = new Generator(DifficultyLevels.Levels.HARD);
+                generator.generateSudoku();
+                frame.remove(levelsScreen);
+                setGame(generator);
                 frame.add(game);
                 game.revalidate();
                 game.repaint();

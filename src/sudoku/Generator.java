@@ -10,8 +10,8 @@ public class Generator {
     private final DifficultyLevels.Levels LEVEL;
     Solver solver = new Solver();
 
-    public int[][] getField() {
-        return field;
+    public int getFieldEl(int i, int j) {
+        return field[i][j];
     }
 
     public void setFieldValue(int i, int j, int value) {
@@ -284,7 +284,6 @@ public class Generator {
                 field[i][j] = temp;
             }
         }
-        System.out.println("is one " + solver.isOneSolution(field));
     }
 
     public void solveS() {
@@ -294,13 +293,13 @@ public class Generator {
     public void generateSudoku() {
         createBaseField();
         mixField(20);
-        showField();
-        System.out.print("\n");
+        //showField();
+        //System.out.print("\n");
         removeCells();
-        showField();
+        /*showField();
         System.out.print("\n");
         solveS();
-        showField();
+        showField();*/
     }
 
 }
