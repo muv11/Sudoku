@@ -251,13 +251,11 @@ public class Generator {
     }
 
     private int randomI(int min, int max) {
-        int i = randomNumber(min, max); //выбираем случайную клетку
-        return i;
+        return randomNumber(min, max);
     }
 
     private int randomJ(int min, int max) {
-        int i = randomNumber(min, max); //выбираем случайную клетку
-        return i;
+        return randomNumber(min, max);
     }
 
     public void removeCells() {
@@ -266,8 +264,6 @@ public class Generator {
         DifficultyLevels.chooseLevel(LEVEL);
         int freeCells = new DifficultyLevels().getFreeCells();
         System.out.println(freeCells);
-        int[][] tempField = new int[FIELD_SIZE][FIELD_SIZE];
-        tempField = field;
 
         for (int k = 0; k <= freeCells; ) {
             int i = randomI(min, max);
@@ -291,8 +287,8 @@ public class Generator {
         System.out.println("is one " + solver.isOneSolution(field));
     }
 
-    public boolean solveS() {
-        return solver.solveSudoku(field);
+    public void solveS() {
+        solver.solveSudoku(field);
     }
 
     public void generateSudoku() {
