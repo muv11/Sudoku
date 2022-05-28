@@ -11,21 +11,23 @@ public class App {
     private Action action = new Action();
     private BoxLayout startLayout, levelsLayout;
     private JFrame frame;
-    private JPanel startScreen, levelsScreen, game;
-    private JTextField name, levelDiff;
+    private JPanel startScreen, modesScreen, game;
+    private JTextField name, modeChoice;
     private Font headerFont, font, fontGame;
     private JTextField[][] grid;
-
-    private JButton play, exit, very_easy, easy, middle, hard, backStart, backLevels, answer;
+    private int[][] userAnswer;
+    private UserSolution us = new UserSolution();
+    private JButton play, exit, test, normal, backStart, backLevels, answer;
 
     public App() {
         frame = new JFrame("Судоку");
         startScreen = new JPanel();
-        levelsScreen = new JPanel();
+        modesScreen = new JPanel();
         game = new JPanel();
         grid = new JTextField[FIELD_SIZE][FIELD_SIZE];
+        userAnswer = new int[FIELD_SIZE][FIELD_SIZE];
         startLayout = new BoxLayout(startScreen, BoxLayout.Y_AXIS);
-        levelsLayout = new BoxLayout(levelsScreen, BoxLayout.Y_AXIS);
+        levelsLayout = new BoxLayout(modesScreen, BoxLayout.Y_AXIS);
 
         frame.setVisible(true);
         //frame.setResizable(false);
@@ -34,6 +36,7 @@ public class App {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(550, 650);
     }
+
 
     public void setText() {
         headerFont = new Font("Century Gothic", Font.BOLD, 80);
@@ -46,11 +49,11 @@ public class App {
         name.setBackground(Color.WHITE);
         name.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
-        levelDiff = new JTextField("СЛОЖНОСТЬ");
-        levelDiff.setFont(headerFont);
-        levelDiff.setEditable(false);
-        levelDiff.setBackground(Color.WHITE);
-        levelDiff.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        modeChoice = new JTextField("РЕЖИМ ИГРЫ");
+        modeChoice.setFont(headerFont);
+        modeChoice.setEditable(false);
+        modeChoice.setBackground(Color.WHITE);
+        modeChoice.setBorder(BorderFactory.createLineBorder(Color.WHITE));
     }
 
     public void setStartScreen() {
@@ -92,8 +95,8 @@ public class App {
 
     public void setLevels() {
         setLevelsButtons();
-        levelsScreen.setBackground(Color.WHITE);
-        levelsScreen.setLayout(levelsLayout);
+        modesScreen.setBackground(Color.WHITE);
+        modesScreen.setLayout(levelsLayout);
         JPanel helper1 = new JPanel();
         JPanel helper2 = new JPanel();
         JPanel helper3 = new JPanel();
@@ -107,50 +110,36 @@ public class App {
         helper5.setBackground(Color.WHITE);
         helper6.setBackground(Color.WHITE);
 
-        helper1.add(levelDiff);
-        levelsScreen.add(helper1);
-        helper2.add(very_easy);
-        levelsScreen.add(helper2);
-        levelsScreen.add(Box.createRigidArea(new Dimension(0, 3)));
-        helper3.add(easy);
-        levelsScreen.add(helper3);
-        levelsScreen.add(Box.createRigidArea(new Dimension(0, 3)));
-        helper4.add(middle);
-        levelsScreen.add(helper4);
-        levelsScreen.add(Box.createRigidArea(new Dimension(0, 3)));
-        helper5.add(hard);
-        levelsScreen.add(helper5);
-        levelsScreen.add(Box.createRigidArea(new Dimension(0, 3)));
+        helper1.add(modeChoice);
+        modesScreen.add(helper1);
+        helper2.add(test);
+        modesScreen.add(helper2);
+        modesScreen.add(Box.createRigidArea(new Dimension(0, 3)));
+        helper3.add(normal);
+        modesScreen.add(helper3);
+        modesScreen.add(Box.createRigidArea(new Dimension(0, 3)));
         helper6.add(backStart);
-        levelsScreen.add(helper6);
-        levelsScreen.add(Box.createRigidArea(new Dimension(0, 2)));
-        levelsScreen.revalidate();
-        levelsScreen.repaint();
+        modesScreen.add(helper6);
+        modesScreen.add(Box.createRigidArea(new Dimension(0, 2)));
+        modesScreen.revalidate();
+        modesScreen.repaint();
     }
 
     private void setLevelsButtons() {
-        very_easy = new JButton("ОЧЕНЬ ЛЕГКАЯ");
-        easy = new JButton("ЛЕГКАЯ");
-        middle = new JButton("СРЕДНЯЯ");
-        hard = new JButton("СЛОЖНАЯ");
+        test = new JButton("ТЕСТОВЫЙ");
+        normal = new JButton("НОРМАЛЬНЫЙ");
         backStart = new JButton("НАЗАД");
 
-        very_easy.setBackground(Color.decode("#D2F8F3"));
-        easy.setBackground(Color.decode("#D2F8F3"));
-        middle.setBackground(Color.decode("#D2F8F3"));
-        hard.setBackground(Color.decode("#D2F8F3"));
+        test.setBackground(Color.decode("#D2F8F3"));
+        normal.setBackground(Color.decode("#D2F8F3"));
         backStart.setBackground(Color.decode("#D2F8F3"));
 
-        very_easy.setFont(font);
-        easy.setFont(font);
-        middle.setFont(font);
-        hard.setFont(font);
+        test.setFont(font);
+        normal.setFont(font);
         backStart.setFont(font);
 
-        very_easy.addActionListener(action);
-        easy.addActionListener(action);
-        middle.addActionListener(action);
-        hard.addActionListener(action);
+        test.addActionListener(action);
+        normal.addActionListener(action);
         backStart.addActionListener(action);
     }
 
@@ -159,37 +148,39 @@ public class App {
         game.setBackground(Color.WHITE);
         game.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.anchor = GridBagConstraints.SOUTH;
-
-        JPanel gridPanel = new JPanel();
-        GridLayout gridLayout = new GridLayout(FIELD_SIZE, FIELD_SIZE, 1, 1);
-        gridPanel.setLayout(gridLayout);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.BOTH;
 
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 if (generator.getFieldEl(i, j) == 0) {
                     grid[i][j] = new JTextField("");
                 } else {
-                    //grid[i][j].setText(String.valueOf(generator.getFieldEl(i, j)));
                     grid[i][j] = new JTextField(String.valueOf(generator.getFieldEl(i, j)));
                     grid[i][j].setEditable(false);
+                    grid[i][j].setBackground(Color.decode("#D2F8F1"));
                 }
-                grid[i][j].setAlignmentX(10f);
-                grid[i][j].setFont(fontGame);
+                grid[i][j].setFont(font);
+                grid[i][j].setPreferredSize(new Dimension(45, 45));
                 grid[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-                gridPanel.add(grid[i][j]);
-
+                gbc.gridwidth = 1;
+                gbc.gridheight = 1;
+                game.add(grid[i][j], gbc);
+                gbc.gridx++;
             }
+            gbc.gridx = 1;
+            gbc.gridy++;
         }
 
-        game.add(gridPanel);
-        gbc.weighty = 0;
+        gbc.gridwidth = 12;
+        gbc.gridy = 12;
+        gbc.gridx = 0;
         game.add(answer, gbc);
+        //gbc.gridx = 6;
+        gbc.gridy = 13;
         game.add(backLevels, gbc);
+
         game.revalidate();
         game.repaint();
     }
@@ -212,60 +203,53 @@ public class App {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == play) {
                 frame.remove(startScreen);
-                frame.add(levelsScreen);
-                levelsScreen.revalidate();
-                levelsScreen.repaint();
+                frame.add(modesScreen);
+                modesScreen.revalidate();
+                modesScreen.repaint();
             }
             if (e.getSource() == exit) {
                 System.exit(0);
             }
             if (e.getSource() == backStart) {
-                frame.remove(levelsScreen);
+                frame.remove(modesScreen);
                 frame.add(startScreen);
                 startScreen.revalidate();
                 startScreen.repaint();
             }
             if (e.getSource() == backLevels) {
                 frame.remove(game);
-                frame.add(levelsScreen);
-                levelsScreen.revalidate();
-                levelsScreen.repaint();
+                frame.add(modesScreen);
+                modesScreen.revalidate();
+                modesScreen.repaint();
             }
-            if (e.getSource() == very_easy) {
-                Generator generator = new Generator(DifficultyLevels.Levels.VERY_EASY);
-                generator.generateSudoku();
-                frame.remove(levelsScreen);
-                setGame(generator);
-                frame.add(game);
-                game.revalidate();
+            if (e.getSource() == test || e.getSource() == normal) {
+                if (e.getSource() == test) {
+                    Generator generator = new Generator(GameModes.Modes.TEST);
+                    generator.removeCells();
+                    us.getField(generator.getField());
+                    frame.remove(modesScreen);
+                    setGame(generator);
+                    frame.add(game);
+                }
+                if (e.getSource() == normal) {
+                    Generator generator = new Generator(GameModes.Modes.NORMAL);
+                    generator.removeCells();
+                    us.getField(generator.getField());
+                    frame.remove(modesScreen);
+                    setGame(generator);
+                    frame.add(game);
+                }
                 game.repaint();
+                game.revalidate();
             }
-            if (e.getSource() == easy) {
-                Generator generator = new Generator(DifficultyLevels.Levels.EASY);
-                generator.generateSudoku();
-                frame.remove(levelsScreen);
-                setGame(generator);
-                frame.add(game);
-                game.revalidate();
-                game.repaint();
-            }
-            if (e.getSource() == middle) {
-                Generator generator = new Generator(DifficultyLevels.Levels.MEDIUM);
-                generator.generateSudoku();
-                frame.remove(levelsScreen);
-                setGame(generator);
-                frame.add(game);
-                game.revalidate();
-                game.repaint();
-            }
-            if (e.getSource() == hard) {
-                Generator generator = new Generator(DifficultyLevels.Levels.HARD);
-                generator.generateSudoku();
-                frame.remove(levelsScreen);
-                setGame(generator);
-                frame.add(game);
-                game.revalidate();
-                game.repaint();
+            if (e.getSource() == answer) {
+                for (int i = 0; i < FIELD_SIZE; i++) {
+                    for (int j = 0; j < FIELD_SIZE; j++) {
+                        userAnswer[i][j] = Integer.parseInt(grid[i][j].getText());
+                    }
+                }
+                us.getAnswer(userAnswer);
+                us.checkAnswer();
             }
         }
     }

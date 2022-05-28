@@ -16,8 +16,12 @@ public class MainSudoku {
 
     public static void main(String[] args) {
 
-        /*Generator generator = new Generator(DifficultyLevels.Levels.HARD);
-        generator.generateSudoku();*/
+        /*Generator generator = new Generator(GameModes.Modes.NORMAL);
+        generator.removeCells();
+        generator.showField();
+        System.out.print("\n");
+        generator.solveS();
+        generator.showField();*/
 
         /*Solver solver = new Solver();
         System.out.println(solver.isOneSolution(field));
@@ -28,10 +32,12 @@ public class MainSudoku {
         DifficultyLevels.chooseLevel(DifficultyLevels.Levels.EASY);
         System.out.println(l.getFreeCells());*/
 
+        /*UserSolution us = new UserSolution();
+        us.showAnswer();*/
+
         App app = new App();
         app.setText();
         app.setStartScreen();
         app.setLevels();
-
     }
 }

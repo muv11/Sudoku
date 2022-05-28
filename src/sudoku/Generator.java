@@ -7,11 +7,16 @@ public class Generator {
     private int[][] field;
     private final int[] numbers;
     private final int FIELD_SIZE = 9;
-    private final DifficultyLevels.Levels LEVEL;
+    private final GameModes.Modes MODE;
     Solver solver = new Solver();
+    long m = System.currentTimeMillis();
 
     public int getFieldEl(int i, int j) {
         return field[i][j];
+    }
+
+    public int[][] getField() {
+        return field;
     }
 
     public void setFieldValue(int i, int j, int value) {
@@ -24,8 +29,8 @@ public class Generator {
 
     /* выделяем память игровому полю и
     * массиву с числами, которым будем заполнять поле */
-    public Generator(DifficultyLevels.Levels LEVEL) {
-        this.LEVEL = LEVEL;
+    public Generator(GameModes.Modes LEVEL) {
+        this.MODE = LEVEL;
         field = new int[FIELD_SIZE][FIELD_SIZE];
         numbers = new int[FIELD_SIZE];
     }
@@ -259,10 +264,12 @@ public class Generator {
     }
 
     public void removeCells() {
+        createBaseField();
+        mixField(15);
         int min = 0;
         int max = 8;
-        DifficultyLevels.chooseLevel(LEVEL);
-        int freeCells = new DifficultyLevels().getFreeCells();
+        GameModes.chooseMode(MODE);
+        int freeCells = new GameModes().getFreeCells();
         System.out.println(freeCells);
 
         for (int k = 0; k <= freeCells; ) {
@@ -274,7 +281,7 @@ public class Generator {
             }
 
             int temp = field[i][j];
-            field[i][j] = 0; //удаляем клетку
+            field[i][j] = 0;
 
             if (solver.isOneSolution(field)) {
                 k++;
@@ -283,7 +290,22 @@ public class Generator {
             if (!solver.isOneSolution(field)) {
                 field[i][j] = temp;
             }
+            if (System.currentTimeMillis() - m > 1000) {
+                freeCells = new GameModes().getFreeCells();
+            }
         }
+    }
+
+    private int countZero() {
+        int count = 0;
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                if (field[i][j] == 0) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     public void solveS() {
@@ -292,14 +314,14 @@ public class Generator {
 
     public void generateSudoku() {
         createBaseField();
-        mixField(20);
-        //showField();
-        //System.out.print("\n");
+        mixField(15);
+        showField();
+        System.out.print("\n");
         removeCells();
-        /*showField();
+        showField();
         System.out.print("\n");
         solveS();
-        showField();*/
+        showField();
     }
 
 }
