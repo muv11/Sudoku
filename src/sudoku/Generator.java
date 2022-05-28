@@ -8,6 +8,7 @@ public class Generator {
     private final int[] numbers;
     private final int FIELD_SIZE = 9;
     private final DifficultyLevels.Levels LEVEL;
+    Solver solver = new Solver();
 
     public int[][] getField() {
         return field;
@@ -269,10 +270,9 @@ public class Generator {
         tempField = field;
 
         for (int k = 0; k <= freeCells; ) {
-            Solver s = new Solver();
             int i = randomI(min, max);
             int j = randomJ(min, max);
-            if (tempField[i][j] == 0) {
+            if (field[i][j] == 0) {
                 i = randomI(min, max);
                 j = randomJ(min, max);
             }
@@ -280,16 +280,31 @@ public class Generator {
             int temp = field[i][j];
             field[i][j] = 0; //удаляем клетку
 
-            if (s.isOneSolution(field)) {
+            if (solver.isOneSolution(field)) {
                 k++;
-                tempField[i][j] = 0;
+                field[i][j] = 0;
             }
-            if (!s.isOneSolution(field)) {
+            if (!solver.isOneSolution(field)) {
                 field[i][j] = temp;
             }
         }
-        field = tempField;
+        System.out.println("is one " + solver.isOneSolution(field));
     }
 
+    public boolean solveS() {
+        return solver.solveSudoku(field);
+    }
+
+    public void generateSudoku() {
+        createBaseField();
+        mixField(20);
+        showField();
+        System.out.print("\n");
+        removeCells();
+        showField();
+        System.out.print("\n");
+        solveS();
+        showField();
+    }
 
 }
