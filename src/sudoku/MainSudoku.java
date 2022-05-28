@@ -37,6 +37,7 @@ public class MainSudoku {
         App app = new App();
         app.setText();
         app.setStartScreen();
+        app.setLevels();
 
     }
 }
