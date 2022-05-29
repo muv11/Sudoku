@@ -22,6 +22,7 @@ public class App {
     private UserSolution us = new UserSolution();
     private AutoSolution as = new AutoSolution();
     private JButton play, exit, test, normal, backStart, backLevels, answer, next, backLevEd, edit, auto;
+    private boolean[][] marks;
 
     public App() {
         frame = new JFrame("Судоку");
@@ -32,17 +33,17 @@ public class App {
         grid = new JTextField[FIELD_SIZE][FIELD_SIZE];
         editorField = new int[FIELD_SIZE][FIELD_SIZE];
         userAnswer = new int[FIELD_SIZE][FIELD_SIZE];
+        marks = new boolean[FIELD_SIZE][FIELD_SIZE];
         startLayout = new BoxLayout(startScreen, BoxLayout.Y_AXIS);
         levelsLayout = new BoxLayout(modesScreen, BoxLayout.Y_AXIS);
 
         frame.setVisible(true);
-        //frame.setResizable(false);
+        frame.setResizable(false);
         frame.getContentPane();
         frame.pack();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(550, 650);
     }
-
 
     public void setText() {
         headerFont = new Font("Century Gothic", Font.BOLD, 80);
@@ -181,8 +182,10 @@ public class App {
                             }
                         }
                     });
+                    marks[i][j] = false;
                 } else {
                     grid[i][j] = new JTextField(String.valueOf(field[i][j]));
+                    marks[i][j] = true;
                     grid[i][j].setEditable(false);
                     grid[i][j].setBackground(Color.decode("#D2F8F1"));
                 }
@@ -357,7 +360,7 @@ public class App {
                 Generator generator = new Generator(GameModes.Modes.TEST);
                 generator.removeCells();
                 us.getField(generator.getField());
-                as.getField(generator.getField());
+                //as.getField(generator.getField());
                 frame.remove(modesScreen);
                 setGame(generator.getField());
                 frame.add(game);
@@ -368,7 +371,7 @@ public class App {
                 Generator generator = new Generator(GameModes.Modes.NORMAL);
                 generator.removeCells();
                 us.getField(generator.getField());
-                as.getField(generator.getField());
+                //as.getField(generator.getField());
                 frame.remove(modesScreen);
                 setGame(generator.getField());
                 frame.add(game);
@@ -396,12 +399,15 @@ public class App {
                 us.checkAnswer();
             }
             if (e.getSource() == auto) {
-                int[][]rightField = as.autoAnswer();
-                /*for (int i = 0; i < FIELD_SIZE; i++) {
+                for (int i = 0; i < FIELD_SIZE; i++) {
                     for (int j = 0; j < FIELD_SIZE; j++) {
-                        grid[i][j].setText(String.valueOf(rightField[i][j]));
+                        if (marks[i][j]) {
+                            as.setElement(i, j, Integer.parseInt(grid[i][j].getText()));
+                        }
                     }
-                }*/
+                }
+                int[][]rightField = as.autoAnswer();
+
                 game.remove(backLevels);
                 game.remove(answer);
                 game.remove(auto);

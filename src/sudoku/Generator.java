@@ -11,20 +11,8 @@ public class Generator {
     Solver solver = new Solver();
     long m = System.currentTimeMillis();
 
-    public int getFieldEl(int i, int j) {
-        return field[i][j];
-    }
-
     public int[][] getField() {
         return field;
-    }
-
-    public void setFieldValue(int i, int j, int value) {
-        field[i][j] = value;
-    }
-
-    public int getSizeField() {
-        return FIELD_SIZE;
     }
 
     /* выделяем память игровому полю и
@@ -275,7 +263,7 @@ public class Generator {
         for (int k = 0; k <= freeCells; ) {
             int i = randomI(min, max);
             int j = randomJ(min, max);
-            if (field[i][j] == 0) {
+            while (field[i][j] == 0) {
                 i = randomI(min, max);
                 j = randomJ(min, max);
             }
@@ -294,18 +282,6 @@ public class Generator {
                 freeCells = new GameModes().getFreeCells();
             }
         }
-    }
-
-    private int countZero() {
-        int count = 0;
-        for (int i = 0; i < FIELD_SIZE; i++) {
-            for (int j = 0; j < FIELD_SIZE; j++) {
-                if (field[i][j] == 0) {
-                    count++;
-                }
-            }
-        }
-        return count;
     }
 
     public void solveS() {

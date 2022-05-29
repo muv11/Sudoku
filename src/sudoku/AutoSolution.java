@@ -13,13 +13,14 @@ public class AutoSolution {
         solver = new Solver();
     }
 
-    public void getField(int[][] field) {
-        this.field = field;
+    public void setElement(int i, int j, int val) {
+        field[i][j] = val;
     }
 
     public int[][] autoAnswer() {
         solver.solveSudoku(field);
-        return answer = field;
+
+        return solver.getSolution();
     }
 
 }
