@@ -8,7 +8,8 @@ public class GameModes {
 
     enum Modes {
         TEST,
-        NORMAL;
+        NORMAL,
+        EDITOR;
     }
 
     private static int freeCells;
