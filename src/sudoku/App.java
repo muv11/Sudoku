@@ -17,10 +17,11 @@ public class App {
     private JPanel startScreen, modesScreen, game, editor;
     private JTextField name, modeChoice;
     private Font headerFont, font, fontGame;
-    private JTextField[][] grid, editorGrid;
-    private int[][] userAnswer;
+    private JTextField[][] grid;
+    private int[][] userAnswer, editorField;
     private UserSolution us = new UserSolution();
-    private JButton play, exit, test, normal, backStart, backLevels, answer, next, backLevEd, edit;
+    private AutoSolution as = new AutoSolution();
+    private JButton play, exit, test, normal, backStart, backLevels, answer, next, backLevEd, edit, auto;
 
     public App() {
         frame = new JFrame("Судоку");
@@ -29,7 +30,7 @@ public class App {
         editor = new JPanel();
         game = new JPanel();
         grid = new JTextField[FIELD_SIZE][FIELD_SIZE];
-        editorGrid = new JTextField[FIELD_SIZE][FIELD_SIZE];
+        editorField = new int[FIELD_SIZE][FIELD_SIZE];
         userAnswer = new int[FIELD_SIZE][FIELD_SIZE];
         startLayout = new BoxLayout(startScreen, BoxLayout.Y_AXIS);
         levelsLayout = new BoxLayout(modesScreen, BoxLayout.Y_AXIS);
@@ -155,7 +156,7 @@ public class App {
         backStart.addActionListener(action);
     }
 
-    public void setGame(Generator generator) {
+    public void setGame(int[][] field) {
         setGameButtons();
         game.setBackground(Color.WHITE);
         game.setLayout(new GridBagLayout());
@@ -166,7 +167,7 @@ public class App {
 
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
-                if (generator.getFieldEl(i, j) == 0) {
+                if (field[i][j] == 0) {
                     grid[i][j] = new JTextField("");
                     PlainDocument doc = (PlainDocument) grid[i][j].getDocument();
                     doc.setDocumentFilter(new DigitFilter());
@@ -181,7 +182,7 @@ public class App {
                         }
                     });
                 } else {
-                    grid[i][j] = new JTextField(String.valueOf(generator.getFieldEl(i, j)));
+                    grid[i][j] = new JTextField(String.valueOf(field[i][j]));
                     grid[i][j].setEditable(false);
                     grid[i][j].setBackground(Color.decode("#D2F8F1"));
                 }
@@ -202,21 +203,24 @@ public class App {
         gbc.gridx = 0;
         game.add(answer, gbc);
         gbc.gridy = 13;
+        game.add(auto, gbc);
+        gbc.gridy = 14;
         game.add(backLevels, gbc);
-
         game.revalidate();
         game.repaint();
     }
 
     public void setGameButtons() {
         backLevels = new JButton("НАЗАД");
-        answer = new JButton("ОТВЕТ");
+        answer = new JButton("ПРОВЕРКА");
+        auto = new JButton("РЕШЕНИЕ");
         backLevels.setBackground(Color.decode("#D2F8F3"));
         answer.setBackground(Color.decode("#D2F8F3"));
-
+        auto.setBackground(Color.decode("#D2F8F3"));
+        auto.setFont(fontGame);
         backLevels.setFont(fontGame);
         answer.setFont(fontGame);
-
+        auto.addActionListener(action);
         backLevels.addActionListener(action);
         answer.addActionListener(action);
     }
@@ -315,6 +319,7 @@ public class App {
             if (e.getSource() == backLevels) {
                 game.remove(backLevels);
                 game.remove(answer);
+                game.remove(auto);
                 for (int i = 0; i < FIELD_SIZE; i++) {
                     for (int j = 0; j < FIELD_SIZE; j++) {
                         game.remove(grid[i][j]);
@@ -325,12 +330,36 @@ public class App {
                 modesScreen.revalidate();
                 modesScreen.repaint();
             }
+            if (e.getSource() == next) {
+                for (int i = 0; i < FIELD_SIZE; i++) {
+                    for (int j = 0; j < FIELD_SIZE; j++) {
+                        if (grid[i][j].getText().equals("")) {
+                            editorField[i][j] = 0;
+                        } else {
+                            editorField[i][j] = Integer.parseInt(grid[i][j].getText());
+                        }
+                    }
+                }
+                editor.remove(backLevEd);
+                editor.remove(next);
+                for (int i = 0; i < FIELD_SIZE; i++) {
+                    for (int j = 0; j < FIELD_SIZE; j++) {
+                        editor.remove(grid[i][j]);
+                    }
+                }
+                frame.remove(editor);
+                setGame(editorField);
+                frame.add(game);
+                game.revalidate();
+                game.repaint();
+            }
             if (e.getSource() == test) {
                 Generator generator = new Generator(GameModes.Modes.TEST);
                 generator.removeCells();
                 us.getField(generator.getField());
+                as.getField(generator.getField());
                 frame.remove(modesScreen);
-                setGame(generator);
+                setGame(generator.getField());
                 frame.add(game);
                 game.repaint();
                 game.revalidate();
@@ -339,8 +368,9 @@ public class App {
                 Generator generator = new Generator(GameModes.Modes.NORMAL);
                 generator.removeCells();
                 us.getField(generator.getField());
+                as.getField(generator.getField());
                 frame.remove(modesScreen);
-                setGame(generator);
+                setGame(generator.getField());
                 frame.add(game);
                 game.repaint();
                 game.revalidate();
@@ -352,15 +382,39 @@ public class App {
                 editor.repaint();
                 editor.revalidate();
             }
-
             if (e.getSource() == answer) {
                 for (int i = 0; i < FIELD_SIZE; i++) {
                     for (int j = 0; j < FIELD_SIZE; j++) {
-                        userAnswer[i][j] = Integer.parseInt(grid[i][j].getText());
+                        if (grid[i][j].getText().equals("")) {
+                            userAnswer[i][j] = 0;
+                        } else {
+                            userAnswer[i][j] = Integer.parseInt(grid[i][j].getText());
+                        }
                     }
                 }
                 us.getAnswer(userAnswer);
                 us.checkAnswer();
+            }
+            if (e.getSource() == auto) {
+                int[][]rightField = as.autoAnswer();
+                /*for (int i = 0; i < FIELD_SIZE; i++) {
+                    for (int j = 0; j < FIELD_SIZE; j++) {
+                        grid[i][j].setText(String.valueOf(rightField[i][j]));
+                    }
+                }*/
+                game.remove(backLevels);
+                game.remove(answer);
+                game.remove(auto);
+                for (int i = 0; i < FIELD_SIZE; i++) {
+                    for (int j = 0; j < FIELD_SIZE; j++) {
+                        game.remove(grid[i][j]);
+                    }
+                }
+                frame.remove(game);
+                setGame(rightField);
+                frame.add(game);
+                game.revalidate();
+                game.repaint();
             }
         }
     }

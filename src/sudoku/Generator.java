@@ -265,7 +265,7 @@ public class Generator {
 
     public void removeCells() {
         createBaseField();
-        mixField(15);
+        mixField(20);
         int min = 0;
         int max = 8;
         GameModes.chooseMode(MODE);
@@ -314,7 +314,7 @@ public class Generator {
 
     public void generateSudoku() {
         createBaseField();
-        mixField(15);
+        mixField(20);
         showField();
         System.out.print("\n");
         removeCells();

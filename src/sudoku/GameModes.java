@@ -22,7 +22,7 @@ public class GameModes {
             freeCells = 5;
         }
         if (MODE == NORMAL) {
-            freeCells = rand.nextInt(30 - 20) + 20;
+            freeCells = rand.nextInt(25 - 20) + 20;
         }
         setFreeCells(freeCells);
     }
