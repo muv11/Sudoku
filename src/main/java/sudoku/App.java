@@ -358,7 +358,8 @@ public class App {
             }
             if (e.getSource() == test) {
                 Generator generator = new Generator(GameModes.Modes.TEST);
-                generator.removeCells();
+                generator.generateSudoku();
+                //generator.removeCells();
                 us.getField(generator.getField());
                 //as.getField(generator.getField());
                 frame.remove(modesScreen);
@@ -369,7 +370,8 @@ public class App {
             }
             if (e.getSource() == normal) {
                 Generator generator = new Generator(GameModes.Modes.NORMAL);
-                generator.removeCells();
+                generator.generateSudoku();
+                //generator.removeCells();
                 us.getField(generator.getField());
                 //as.getField(generator.getField());
                 frame.remove(modesScreen);
@@ -399,13 +401,20 @@ public class App {
                 us.checkAnswer();
             }
             if (e.getSource() == auto) {
+                int[][] gridInt = new int[FIELD_SIZE][FIELD_SIZE];
                 for (int i = 0; i < FIELD_SIZE; i++) {
                     for (int j = 0; j < FIELD_SIZE; j++) {
-                        if (marks[i][j]) {
-                            as.setElement(i, j, Integer.parseInt(grid[i][j].getText()));
+                        //if (marks[i][j]) {
+                            //as.setElement(i, j, Integer.parseInt(grid[i][j].getText()));
+                        if (grid[i][j].getText().equals("")) {
+                            gridInt[i][j] = 0;
+                        } else {
+                            gridInt[i][j] = Integer.parseInt(grid[i][j].getText());
                         }
+                        //}
                     }
                 }
+                as.setField(gridInt);
                 int[][]rightField = as.autoAnswer();
 
                 game.remove(backLevels);

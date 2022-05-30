@@ -5,6 +5,7 @@ package sudoku;
 public class Generator {
 
     private int[][] field;
+    private int[][] copyField;
     private final int[] numbers;
     private final int FIELD_SIZE = 9;
     private final GameModes.Modes MODE;
@@ -20,6 +21,7 @@ public class Generator {
     public Generator(GameModes.Modes LEVEL) {
         this.MODE = LEVEL;
         field = new int[FIELD_SIZE][FIELD_SIZE];
+        copyField = new int[FIELD_SIZE][FIELD_SIZE];
         numbers = new int[FIELD_SIZE];
     }
 
@@ -54,7 +56,7 @@ public class Generator {
 
     /* сдвиг в массиве чисел влево на заданное число,
     * нужен для создания базового поля */
-    private void shiftLeft(int lengthShift) {
+    public int[] shiftLeft(int lengthShift) {
         int[] tempArrEnd = new int[lengthShift];
         for(int i=0; i<lengthShift; i++) {
             tempArrEnd[i] = numbers[i];
@@ -71,6 +73,7 @@ public class Generator {
         for(int i=tempArrBegin.length, k=0; i<FIELD_SIZE; i++, k++) {
             numbers[i] = tempArrEnd[k];
         }
+        return numbers;
     }
 
     /* создание базового поля:
@@ -78,7 +81,7 @@ public class Generator {
     * каждую строку сдвигаем на 3;
     * при переходе в новый горизонатльный район,
     * сдвигаем строку на 4*/
-    public void createBaseField() {
+    public int[][] createBaseField() {
         fillNumbersArr();
         int counter = 0;
 
@@ -96,12 +99,13 @@ public class Generator {
             }
 
         }
+        return field;
     }
 
     /* 1ый метод для перемешивания поля:
     * столбцы становятся строками и
     * строки столбцами */
-    private void transposeField() {
+    public int[][] transposeField() {
         for(int i=0; i<FIELD_SIZE; i++) {
             for(int j=i+1; j<FIELD_SIZE; j++) {
                 int temp = field[i][j];
@@ -109,6 +113,7 @@ public class Generator {
                 field[j][i] = temp;
             }
         }
+        return field;
     }
 
     //случайная строка или столбец; от 0 до 8 в зависимости от района
@@ -251,16 +256,18 @@ public class Generator {
         return randomNumber(min, max);
     }
 
-    public void removeCells() {
-        createBaseField();
-        mixField(20);
+    public int removeCells() {
         int min = 0;
         int max = 8;
         GameModes.chooseMode(MODE);
         int freeCells = new GameModes().getFreeCells();
-        System.out.println(freeCells);
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                copyField[i][j] = field[i][j];
+            }
+        }
 
-        for (int k = 0; k <= freeCells; ) {
+        for (int k = 0; k < freeCells; ) {
             int i = randomI(min, max);
             int j = randomJ(min, max);
             while (field[i][j] == 0) {
@@ -273,7 +280,7 @@ public class Generator {
 
             if (solver.isOneSolution(field)) {
                 k++;
-                field[i][j] = 0;
+                copyField[i][j] = 0;
             }
             if (!solver.isOneSolution(field)) {
                 field[i][j] = temp;
@@ -282,6 +289,12 @@ public class Generator {
                 freeCells = new GameModes().getFreeCells();
             }
         }
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                field[i][j] = copyField[i][j];
+            }
+        }
+        return freeCells;
     }
 
     public void solveS() {
@@ -291,13 +304,7 @@ public class Generator {
     public void generateSudoku() {
         createBaseField();
         mixField(20);
-        showField();
-        System.out.print("\n");
         removeCells();
-        showField();
-        System.out.print("\n");
-        solveS();
-        showField();
     }
 
 }

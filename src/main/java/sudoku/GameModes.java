@@ -6,7 +6,7 @@ import static sudoku.GameModes.Modes.*;
 
 public class GameModes {
 
-    enum Modes {
+    public enum Modes {
         TEST,
         NORMAL,
         EDITOR;
