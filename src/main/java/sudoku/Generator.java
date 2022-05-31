@@ -1,7 +1,5 @@
 package sudoku;
 
-//понятия: строка, стобец, поле/таблица (9*9), гориз./вертик. район (3*9), блок (кусок таблицы 3*3)
-
 public class Generator {
 
     private int[][] field;
@@ -16,30 +14,11 @@ public class Generator {
         return field;
     }
 
-    /* выделяем память игровому полю и
-    * массиву с числами, которым будем заполнять поле */
-    public Generator(GameModes.Modes LEVEL) {
-        this.MODE = LEVEL;
+    public Generator(GameModes.Modes MODE) {
+        this.MODE = MODE;
         field = new int[FIELD_SIZE][FIELD_SIZE];
         copyField = new int[FIELD_SIZE][FIELD_SIZE];
         numbers = new int[FIELD_SIZE];
-    }
-
-    //вывод массива чисел на экран
-    public void showNumbersArr() {
-        for(int i=0; i<FIELD_SIZE; i++) {
-            System.out.print(numbers[i] + " ");
-        }
-    }
-
-    //вывод игрового поля на экран
-    public void showField() {
-        for(int i=0; i<FIELD_SIZE; i++) {
-            for(int j=0; j<FIELD_SIZE; j++) {
-                System.out.print(field[i][j] + " ");
-            }
-            System.out.print("\n");
-        }
     }
 
     //заполнение массива чисел от 1 до 9
@@ -54,8 +33,7 @@ public class Generator {
         return (int) (Math.random() * (max - min + 1) + min);
     }
 
-    /* сдвиг в массиве чисел влево на заданное число,
-    * нужен для создания базового поля */
+    /* сдвиг в массиве чисел влево на заданное число */
     public int[] shiftLeft(int lengthShift) {
         int[] tempArrEnd = new int[lengthShift];
         for(int i=0; i<lengthShift; i++) {
@@ -103,8 +81,7 @@ public class Generator {
     }
 
     /* 1ый метод для перемешивания поля:
-    * столбцы становятся строками и
-    * строки столбцами */
+    * транспонирование матрицы */
     public int[][] transposeField() {
         for(int i=0; i<FIELD_SIZE; i++) {
             for(int j=i+1; j<FIELD_SIZE; j++) {
@@ -163,11 +140,11 @@ public class Generator {
         }
     }
 
-    //с какой строки начинать обмен районов в зависимотси от них
+    //с какой строки начинать обмен районов
     private int checkDistrict(int district) {
         int p = -1;
-        if(district == 1) {
-            p = 0;
+        if(district == 1) { //если 1 район
+            p = 0; //то начинаем с 0 строки
         }
         if(district == 2) {
             p = 3;
@@ -180,7 +157,7 @@ public class Generator {
 
     /* 4ый метод для перемешивания поля:
      * обмен горизонтальных районов*/
-    private void swapHorizontalDistricts() {
+    public void swapHorizontalDistricts() {
         final int district1 = randomNumber(1, 3);
         final int district2 = randomNumber(1, 3);
         int i1 = -1;
@@ -201,7 +178,7 @@ public class Generator {
 
     /* 5ый метод для перемешивания поля:
      * обмен вертикальных районов*/
-    private void swapVerticalDistricts() {
+    public void swapVerticalDistricts() {
         final int district1 = randomNumber(1, 3);
         final int district2 = randomNumber(1, 3);
         int j1 = -1;
@@ -230,32 +207,26 @@ public class Generator {
         int min = 1;
 
         for(int i=0; i<count; i++) {
-            if(randomNumber(min, max) == 1) {
+            int rn = randomNumber(min, max); //выбор метода
+            if(rn == 1) {
                 transposeField();
             }
-            if(randomNumber(min, max) == 2) {
+            if(rn == 2) {
                 swapRowsInDistrict();
             }
-            if(randomNumber(min, max) == 3) {
+            if(rn == 3) {
                 swapColumnsInDistrict();
             }
-            if(randomNumber(min, max) == 4) {
+            if(rn == 4) {
                 swapHorizontalDistricts();
             }
-            if(randomNumber(min, max) == 5) {
+            if(rn == 5) {
                 swapVerticalDistricts();
             }
         }
     }
 
-    private int randomI(int min, int max) {
-        return randomNumber(min, max);
-    }
-
-    private int randomJ(int min, int max) {
-        return randomNumber(min, max);
-    }
-
+    //копирование матриц
     public void copyArray(int[][] copyArr, int[][]Arr) {
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
@@ -264,6 +235,7 @@ public class Generator {
         }
     }
 
+    //удаление клеток
     public int removeCells() {
         int min = 0;
         int max = 8;
@@ -272,18 +244,18 @@ public class Generator {
         copyArray(copyField, field);
 
         for (int k = 0; k < freeCells; ) {
-            int i = randomI(min, max);
-            int j = randomJ(min, max);
+            int i = randomNumber(min, max); //выбор случайной клетки
+            int j = randomNumber(min, max);
             while (field[i][j] == 0) {
-                i = randomI(min, max);
-                j = randomJ(min, max);
+                i = randomNumber(min, max);
+                j = randomNumber(min, max);
             }
 
             int temp = field[i][j];
             field[i][j] = 0;
 
-            if (solver.isOneSolution(field)) {
-                k++;
+            if (solver.isOneSolution(field)) { //удаляем клетку, если без нее
+                k++; //судоку будет иметь одно решение
                 copyField[i][j] = 0;
             }
             if (!solver.isOneSolution(field)) {

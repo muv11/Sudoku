@@ -6,7 +6,7 @@ import static sudoku.GameModes.Modes.*;
 
 public class GameModes {
 
-    public enum Modes {
+    public enum Modes { //виды режимов
         TEST,
         NORMAL,
         EDITOR;
@@ -15,7 +15,7 @@ public class GameModes {
     private static int freeCells;
     private static Random rand = new Random();
 
-    //выбор уровня сложности
+    //генерация количества пустых клеток в зависимости от режима
     public static void chooseMode(Modes MODE) {
         int freeCells = 0;
         if (MODE == TEST) {

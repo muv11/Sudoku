@@ -17,17 +17,17 @@ public class UserSolution {
     }
 
     public void setAnswer(int[][] answer) {
-        this.answer = answer;
+        this.answer = answer; //получаем ответ пользователя
     }
 
     public void setField(int[][] field) {
-        this.field = field;
+        this.field = field; //получаем нерешенное судоку
     }
 
     public void checkAnswer() {
-        solver.solveSudoku(field);
+        solver.solveSudoku(field); //получаем решение судоку
         Font font = new Font("Century Cothic",Font.BOLD , 20);
-        if (isArrSame()) {
+        if (isArrSame()) {//если решение компьютера и пользователя сходятся, то победа
             JFrame win = new JFrame("Победа");
             win.setBackground(Color.white);
             JTextField text = new JTextField("Поздравляю! Вы победили!");
@@ -49,6 +49,7 @@ public class UserSolution {
         }
     }
 
+    //проверка: сходятся ли решенное судоку и ответ пользователя
     private boolean isArrSame() {
         int count = 0;
         for(int i=0; i<FIELD_SIZE; i++) {
@@ -62,22 +63,6 @@ public class UserSolution {
             return false;
         }
         return true;
-    }
-
-    public void showAnswer() {
-        for(int i=0; i<FIELD_SIZE; i++) {
-            for(int j=0; j<FIELD_SIZE; j++) {
-                System.out.print(answer[i][j] + " ");
-            }
-            System.out.print("\n");
-        }
-        System.out.print("\n");
-        for(int i=0; i<FIELD_SIZE; i++) {
-            for(int j=0; j<FIELD_SIZE; j++) {
-                System.out.print(field[i][j] + " ");
-            }
-            System.out.print("\n");
-        }
     }
 
 }

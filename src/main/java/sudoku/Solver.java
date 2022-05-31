@@ -45,9 +45,11 @@ public class Solver {
     public boolean isValueValid(int[][] field, int row, int column, int value) {
         return !isValueInRow(field, row, value) && !isValueInColumn(field, column, value)
                 && !isValueInBlock(field, row, column, value);
-        //true, если такое значение иожно использовать; false, если такое значение нельзя использовать
+        //true, если такое значение можно использовать
     }
 
+    //готовое поле судоку соответствует правилам
+    //(нет повторяющихся элементов в строке, столбце, блоке)
     public boolean isFieldValid(int[][] field) {
         int count = 0;
         for (int i = 0; i < FIELD_SIZE; i++) {
@@ -82,7 +84,7 @@ public class Solver {
                 count = 0;
             }
         }
-        return true;
+        return true; //поле соответствует правилам
     }
 
     public boolean solveSudoku(int[][] field) {
@@ -90,10 +92,10 @@ public class Solver {
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 if(solvedSudoku[i][j] == 0) {
-                    for (int number = 1; number < 10; number++) {
-                        if(isValueValid(solvedSudoku, i, j, number)) {
+                    for (int number = 1; number < 10; number++) {//перебираются все возможные варианты
+                        if(isValueValid(solvedSudoku, i, j, number)) {//подходит ли значение
                             solvedSudoku[i][j] = number;
-                            if(solveSudoku(solvedSudoku)) {
+                            if(solveSudoku(solvedSudoku)) {//рекурсия
                                 return true; //решена
                             } else {
                                 solvedSudoku[i][j] = 0;
@@ -112,10 +114,10 @@ public class Solver {
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 if(solvedSudokuReverse[i][j] == 0) {
-                    for (int number = 9; number > 0; number--) {
-                        if(isValueValid(solvedSudokuReverse, i, j, number)) {
+                    for (int number = 9; number > 0; number--) {//значения перебираются в обратном порядке
+                        if(isValueValid(solvedSudokuReverse, i, j, number)) {//подходит ли значение
                             solvedSudokuReverse[i][j] = number;
-                            if(solveSudokuReverse(solvedSudokuReverse)) {
+                            if(solveSudokuReverse(solvedSudokuReverse)) {//рекурсия
                                 return true; //решена
                             }
                         }

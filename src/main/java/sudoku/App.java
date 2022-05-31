@@ -61,6 +61,7 @@ public class App {
         modeChoice.setBorder(BorderFactory.createLineBorder(Color.WHITE));
     }
 
+    //создание стартовой панели
     public void setStartScreen() {
         setStartScreenButtons();
         JPanel helper1 = new JPanel();
@@ -87,6 +88,7 @@ public class App {
         startScreen.repaint();
     }
 
+    //создание панели стартового экрана
     private void setStartScreenButtons() {
         play = new JButton("ИГРАТЬ");
         play.setFont(font);
@@ -98,6 +100,7 @@ public class App {
         exit.addActionListener(action);
     }
 
+    //создание панели выбора режимов
     public void setLevels() {
         setLevelsButtons();
         modesScreen.setBackground(Color.WHITE);
@@ -133,6 +136,7 @@ public class App {
         modesScreen.repaint();
     }
 
+    //создание кнопок панели выбора режима
     private void setLevelsButtons() {
         test = new JButton("ТЕСТОВЫЙ");
         normal = new JButton("НОРМАЛЬНЫЙ");
@@ -155,6 +159,7 @@ public class App {
         backStart.addActionListener(action);
     }
 
+    //создание панели игры
     public void setGame(int[][] field) {
         setGameButtons();
         game.setBackground(Color.WHITE);
@@ -169,14 +174,14 @@ public class App {
                 if (field[i][j] == 0) {
                     grid[i][j] = new JTextField("");
                     PlainDocument doc = (PlainDocument) grid[i][j].getDocument();
-                    doc.setDocumentFilter(new DigitFilter());
+                    doc.setDocumentFilter(new DigitFilter()); //чтобы вводились только цифры
                     int finalI = i;
                     int finalJ = j;
                     grid[i][j].addKeyListener(new KeyAdapter() {
                         @Override
                         public void keyTyped(KeyEvent e) {
                             if (grid[finalI][finalJ].getText().length() == 1) {
-                                e.consume();
+                                e.consume(); //чтобы нельзя было ввести больше одного числа
                             }
                         }
                     });
@@ -209,6 +214,7 @@ public class App {
         game.repaint();
     }
 
+    //создание кнопок панели игры
     public void setGameButtons() {
         backLevels = new JButton("НАЗАД");
         answer = new JButton("ПРОВЕРКА");
@@ -224,6 +230,7 @@ public class App {
         answer.addActionListener(action);
     }
 
+    //создание панели редактора
     public void setEditor() {
         setEditorButtons();
         editor.setBackground(Color.WHITE);
@@ -237,14 +244,14 @@ public class App {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 grid[i][j] = new JTextField("");
                 PlainDocument doc = (PlainDocument) grid[i][j].getDocument();
-                doc.setDocumentFilter(new DigitFilter());
+                doc.setDocumentFilter(new DigitFilter());//чтобы вводились только цифры
                 int finalI = i;
                 int finalJ = j;
                 grid[i][j].addKeyListener(new KeyAdapter() {
                     @Override
                     public void keyTyped(KeyEvent e) {
                         if (grid[finalI][finalJ].getText().length() == 1) {
-                            e.consume();
+                            e.consume();//чтобы нельзя было ввести больше одного числа
                         }
                     }
                 });
@@ -271,6 +278,7 @@ public class App {
         editor.repaint();
     }
 
+    //создание кнопок редактора
     public void setEditorButtons() {
         backLevEd = new JButton("НАЗАД");
         next = new JButton("ДАЛЕЕ");
@@ -345,6 +353,7 @@ public class App {
                         }
                     }
                 }
+                //проверка: правильно ли пользователь составил судоку в режиме редактора
                 if (new Solver().isFieldValid(editorField)) {
                     editor.remove(backLevEd);
                     editor.remove(next);
@@ -399,6 +408,7 @@ public class App {
                 editor.repaint();
                 editor.revalidate();
             }
+            //проверка ответа пользователя
             if (e.getSource() == answer) {
                 for (int i = 0; i < FIELD_SIZE; i++) {
                     for (int j = 0; j < FIELD_SIZE; j++) {
@@ -412,6 +422,7 @@ public class App {
                 us.setAnswer(userAnswer);
                 us.checkAnswer();
             }
+            //автоматическое решение
             if (e.getSource() == auto) {
                 int[][] gridInt = new int[FIELD_SIZE][FIELD_SIZE];
                 for (int i = 0; i < FIELD_SIZE; i++) {
