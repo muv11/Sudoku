@@ -48,6 +48,43 @@ public class Solver {
         //true, если такое значение иожно использовать; false, если такое значение нельзя использовать
     }
 
+    public boolean isFieldValid(int[][] field) {
+        int count = 0;
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                for (int k = 0; k < FIELD_SIZE; k++) {
+                    if (field[i][j] != 0) {
+                        if (field[i][j] == field[i][k]) {
+                            count++;
+                        }
+                    }
+                }
+                if (count > 1) {
+                    return false;
+                }
+                count = 0;
+            }
+        }
+
+        count = 0;
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                for (int k = 0; k < FIELD_SIZE; k++) {
+                    if (field[j][i] != 0) {
+                        if (field[j][i] == field[k][i]) {
+                            count++;
+                        }
+                    }
+                }
+                if (count > 1) {
+                    return false;
+                }
+                count = 0;
+            }
+        }
+        return true;
+    }
+
     public boolean solveSudoku(int[][] field) {
         solvedSudoku = field;
         for (int i = 0; i < FIELD_SIZE; i++) {
@@ -57,7 +94,6 @@ public class Solver {
                         if(isValueValid(solvedSudoku, i, j, number)) {
                             solvedSudoku[i][j] = number;
                             if(solveSudoku(solvedSudoku)) {
-                                //solvedSudoku[i][j] = 0;
                                 return true; //решена
                             } else {
                                 solvedSudoku[i][j] = 0;
@@ -80,7 +116,6 @@ public class Solver {
                         if(isValueValid(solvedSudokuReverse, i, j, number)) {
                             solvedSudokuReverse[i][j] = number;
                             if(solveSudokuReverse(solvedSudokuReverse)) {
-                                //solvedSudokuReverse[i][j] = 0;
                                 return true; //решена
                             }
                         }
@@ -100,28 +135,6 @@ public class Solver {
         return solvedSudoku == solvedSudokuReverse; //true одно решение
     }
 
-    /*public boolean solveSudoku(int[][] field) {
-        solvedSudoku = field;
-        for (int i = 0; i < FIELD_SIZE; i++) {
-            for (int j = 0; j < FIELD_SIZE; j++) {
-                if(solvedSudoku[i][j] == 0) {
-                    for (int number = 1; number < 10; number++) {
-                        if(isValueValid(solvedSudoku, i, j, number)) {
-                            solvedSudoku[i][j] = number;
-                            if(solveSudoku(solvedSudoku)) {
-                                return true; //решена
-                            } else {
-                                solvedSudoku[i][j] = 0;
-                            }
-                        }
-                    }
-                    return false; //нет решений
-                }
-            }
-        }
-        return true; //не нуждается в решении
-    }
-*/
     public int[][] getSolution() {
         return solvedSudoku;
     }

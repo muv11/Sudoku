@@ -15,6 +15,7 @@ class GeneratorTest {
         int[] shiftedArr = new int[]{4, 5, 6, 7, 8, 9, 1, 2, 3};
         assertArrayEquals(shiftedArr, g.shiftLeft(3));
     }
+
     @Test
     void createBaseFieldTest() {
         int[][] baseField = new int[][] {

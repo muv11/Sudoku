@@ -16,11 +16,11 @@ public class UserSolution {
         solver = new Solver();
     }
 
-    public void getAnswer(int[][] answer) {
+    public void setAnswer(int[][] answer) {
         this.answer = answer;
     }
 
-    public void getField(int[][] field) {
+    public void setField(int[][] field) {
         this.field = field;
     }
 
@@ -64,10 +64,17 @@ public class UserSolution {
         return true;
     }
 
-    public void showAnswer(int[][] grid) {
+    public void showAnswer() {
         for(int i=0; i<FIELD_SIZE; i++) {
             for(int j=0; j<FIELD_SIZE; j++) {
-                System.out.print(grid[i][j] + " ");
+                System.out.print(answer[i][j] + " ");
+            }
+            System.out.print("\n");
+        }
+        System.out.print("\n");
+        for(int i=0; i<FIELD_SIZE; i++) {
+            for(int j=0; j<FIELD_SIZE; j++) {
+                System.out.print(field[i][j] + " ");
             }
             System.out.print("\n");
         }

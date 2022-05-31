@@ -1,6 +1,6 @@
 package sudoku;
 
-//понятия: строка, стобец, поле/таблица (9*9), гориз./вертик. район (3 блока), блок (кусок таблицы 3*3)
+//понятия: строка, стобец, поле/таблица (9*9), гориз./вертик. район (3*9), блок (кусок таблицы 3*3)
 
 public class Generator {
 
@@ -256,16 +256,20 @@ public class Generator {
         return randomNumber(min, max);
     }
 
+    public void copyArray(int[][] copyArr, int[][]Arr) {
+        for (int i = 0; i < FIELD_SIZE; i++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
+                copyArr[i][j] = Arr[i][j];
+            }
+        }
+    }
+
     public int removeCells() {
         int min = 0;
         int max = 8;
         GameModes.chooseMode(MODE);
         int freeCells = new GameModes().getFreeCells();
-        for (int i = 0; i < FIELD_SIZE; i++) {
-            for (int j = 0; j < FIELD_SIZE; j++) {
-                copyField[i][j] = field[i][j];
-            }
-        }
+        copyArray(copyField, field);
 
         for (int k = 0; k < freeCells; ) {
             int i = randomI(min, max);
@@ -289,16 +293,8 @@ public class Generator {
                 freeCells = new GameModes().getFreeCells();
             }
         }
-        for (int i = 0; i < FIELD_SIZE; i++) {
-            for (int j = 0; j < FIELD_SIZE; j++) {
-                field[i][j] = copyField[i][j];
-            }
-        }
+        copyArray(field, copyField);
         return freeCells;
-    }
-
-    public void solveS() {
-        solver.solveSudoku(field);
     }
 
     public void generateSudoku() {
@@ -306,5 +302,4 @@ public class Generator {
         mixField(20);
         removeCells();
     }
-
 }

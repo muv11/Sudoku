@@ -15,31 +15,7 @@ public class MainSudoku {
     };
 
     public static void main(String[] args) {
-
-        /*Generator generator = new Generator(GameModes.Modes.NORMAL);
-        generator.removeCells();
-        generator.showField();
-        System.out.print("\n");
-        generator.solveS();
-        generator.showField();*/
-
-        /*Solver solver = new Solver();
-        System.out.println(solver.isOneSolution(field));
-        System.out.println(solver.solveSudoku(field));
-        System.out.println(Arrays.deepToString(solver.getSolution()));*/
-
-        /*DifficultyLevels l = new DifficultyLevels();
-        DifficultyLevels.chooseLevel(DifficultyLevels.Levels.EASY);
-        System.out.println(l.getFreeCells());*/
-
-        /*UserSolution us = new UserSolution();
-        us.showAnswer();*/
-
         App app = new App();
-        app.setText();
-        app.setStartScreen();
-        app.setLevels();
-        //AutoSolution as = new AutoSolution();
-
+        app.startSudoku();
     }
 }
