@@ -29,7 +29,7 @@ public class Generator {
     }
 
     //случайное число
-    private int randomNumber(int min, int max) {
+    public int randomNumber(int min, int max) {
         return (int) (Math.random() * (max - min + 1) + min);
     }
 
@@ -94,7 +94,7 @@ public class Generator {
     }
 
     //случайная строка или столбец; от 0 до 8 в зависимости от района
-    private int randomRowOrColumn(int district) {
+    public int randomRowOrColumn(int district) {
         int max = 8;
         int min = 0;
 
@@ -114,7 +114,7 @@ public class Generator {
 
     /* 2ой метод для перемешивания поля:
     * обмен строк внутри горизонтального района*/
-    private void swapRowsInDistrict() {
+    public void swapRowsInDistrict() {
         int district = randomNumber(1, 3); //номера районов, получаем случайный
         int row1 = randomRowOrColumn(district);
         int row2 = randomRowOrColumn(district);
@@ -128,7 +128,7 @@ public class Generator {
 
     /* 3ий метод для перемешивания поля:
      * обмен столбцов внутри вертикального района*/
-    private void swapColumnsInDistrict() {
+    public void swapColumnsInDistrict() {
         int district = randomNumber(1, 3); //номера районов, получаем случайный
         int column1 = randomRowOrColumn(district);
         int column2 = randomRowOrColumn(district);
@@ -141,7 +141,7 @@ public class Generator {
     }
 
     //с какой строки начинать обмен районов
-    private int checkDistrict(int district) {
+    public int checkDistrict(int district) {
         int p = -1;
         if(district == 1) { //если 1 район
             p = 0; //то начинаем с 0 строки
@@ -242,11 +242,10 @@ public class Generator {
         GameModes.chooseMode(MODE);
         int freeCells = new GameModes().getFreeCells();
         copyArray(copyField, field);
-
         for (int k = 0; k < freeCells; ) {
             int i = randomNumber(min, max); //выбор случайной клетки
             int j = randomNumber(min, max);
-            while (field[i][j] == 0) {
+            while (field[i][j] == 0) {//если клетка уже удалена, выбираем другую
                 i = randomNumber(min, max);
                 j = randomNumber(min, max);
             }
@@ -261,10 +260,12 @@ public class Generator {
             if (!solver.isOneSolution(field)) {
                 field[i][j] = temp;
             }
-            if (System.currentTimeMillis() - m > 1000) {
-                freeCells = new GameModes().getFreeCells();
-            }
+
+            if (System.currentTimeMillis() - m > 1000) { //если выполнение программы превышает 1000 мс,
+                freeCells = new GameModes().getFreeCells(); //значит алгоритм не может удалить заданное количество клеток
+            }//выбирается новое значение количества пустых клеток
         }
+
         copyArray(field, copyField);
         return freeCells;
     }

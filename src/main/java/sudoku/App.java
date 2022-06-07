@@ -89,7 +89,7 @@ public class App {
     }
 
     //создание панели стартового экрана
-    private void setStartScreenButtons() {
+    public void setStartScreenButtons() {
         play = new JButton("ИГРАТЬ");
         play.setFont(font);
         play.setBackground(Color.decode("#D2F8F3"));
@@ -137,9 +137,9 @@ public class App {
     }
 
     //создание кнопок панели выбора режима
-    private void setLevelsButtons() {
+    public void setLevelsButtons() {
         test = new JButton("ТЕСТОВЫЙ");
-        normal = new JButton("НОРМАЛЬНЫЙ");
+        normal = new JButton("ОБЫЧНЫЙ");
         edit = new JButton("РЕДАКТОР");
         backStart = new JButton("НАЗАД");
 

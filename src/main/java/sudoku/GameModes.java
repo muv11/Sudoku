@@ -28,7 +28,7 @@ public class GameModes {
     }
 
     //количество свободных клеток на поле
-    private static void setFreeCells(int x) {
+    public static void setFreeCells(int x) {
         freeCells = x;
     }
 

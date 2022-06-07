@@ -50,7 +50,7 @@ public class UserSolution {
     }
 
     //проверка: сходятся ли решенное судоку и ответ пользователя
-    private boolean isArrSame() {
+    public boolean isArrSame() {
         int count = 0;
         for(int i=0; i<FIELD_SIZE; i++) {
             for(int j=0; j<FIELD_SIZE; j++) {
