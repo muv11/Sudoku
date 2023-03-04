@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+/**
+ * Class creates the interface of the app */
 public class App {
 
     private final int FIELD_SIZE = 9;
@@ -61,7 +63,8 @@ public class App {
         modeChoice.setBorder(BorderFactory.createLineBorder(Color.WHITE));
     }
 
-    //создание стартовой панели
+    /**
+     * Method creates start screen */
     public void setStartScreen() {
         setStartScreenButtons();
         JPanel helper1 = new JPanel();
@@ -88,7 +91,8 @@ public class App {
         startScreen.repaint();
     }
 
-    //создание панели стартового экрана
+    /**
+     * Method creates start screen buttons */
     public void setStartScreenButtons() {
         play = new JButton("ИГРАТЬ");
         play.setFont(font);
@@ -100,7 +104,8 @@ public class App {
         exit.addActionListener(action);
     }
 
-    //создание панели выбора режимов
+    /**
+     * Method creates panel of game mode selection */
     public void setLevels() {
         setLevelsButtons();
         modesScreen.setBackground(Color.WHITE);
@@ -136,7 +141,8 @@ public class App {
         modesScreen.repaint();
     }
 
-    //создание кнопок панели выбора режима
+    /**
+     * Method creates buttons of game mode selection panel */
     public void setLevelsButtons() {
         test = new JButton("ТЕСТОВЫЙ");
         normal = new JButton("ОБЫЧНЫЙ");
@@ -159,7 +165,8 @@ public class App {
         backStart.addActionListener(action);
     }
 
-    //создание панели игры
+    /**
+     * Method creates panel of the game */
     public void setGame(int[][] field) {
         setGameButtons();
         game.setBackground(Color.WHITE);
@@ -174,14 +181,14 @@ public class App {
                 if (field[i][j] == 0) {
                     grid[i][j] = new JTextField("");
                     PlainDocument doc = (PlainDocument) grid[i][j].getDocument();
-                    doc.setDocumentFilter(new DigitFilter()); //чтобы вводились только цифры
+                    doc.setDocumentFilter(new DigitFilter()); //enter only numbers
                     int finalI = i;
                     int finalJ = j;
                     grid[i][j].addKeyListener(new KeyAdapter() {
                         @Override
                         public void keyTyped(KeyEvent e) {
                             if (grid[finalI][finalJ].getText().length() == 1) {
-                                e.consume(); //чтобы нельзя было ввести больше одного числа
+                                e.consume(); //only one number in the cell
                             }
                         }
                     });
@@ -214,7 +221,8 @@ public class App {
         game.repaint();
     }
 
-    //создание кнопок панели игры
+     /**
+     * Method creates buttons of the panel of game mode selection */
     public void setGameButtons() {
         backLevels = new JButton("НАЗАД");
         answer = new JButton("ПРОВЕРКА");
@@ -230,7 +238,8 @@ public class App {
         answer.addActionListener(action);
     }
 
-    //создание панели редактора
+    /**
+     * Method creates editor's panel */
     public void setEditor() {
         setEditorButtons();
         editor.setBackground(Color.WHITE);
@@ -244,14 +253,14 @@ public class App {
             for (int j = 0; j < FIELD_SIZE; j++) {
                 grid[i][j] = new JTextField("");
                 PlainDocument doc = (PlainDocument) grid[i][j].getDocument();
-                doc.setDocumentFilter(new DigitFilter());//чтобы вводились только цифры
+                doc.setDocumentFilter(new DigitFilter()); //enter only numbers
                 int finalI = i;
                 int finalJ = j;
                 grid[i][j].addKeyListener(new KeyAdapter() {
                     @Override
                     public void keyTyped(KeyEvent e) {
                         if (grid[finalI][finalJ].getText().length() == 1) {
-                            e.consume();//чтобы нельзя было ввести больше одного числа
+                            e.consume(); //only one number in the cell
                         }
                     }
                 });
@@ -278,7 +287,8 @@ public class App {
         editor.repaint();
     }
 
-    //создание кнопок редактора
+    /**
+     * Creates buttons of the editor's panel */
     public void setEditorButtons() {
         backLevEd = new JButton("НАЗАД");
         next = new JButton("ДАЛЕЕ");
@@ -298,6 +308,8 @@ public class App {
         setLevels();
     }
 
+    /**
+     * Class is responsible for binding action events to buttons */
     private class Action implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -353,7 +365,7 @@ public class App {
                         }
                     }
                 }
-                //проверка: правильно ли пользователь составил судоку в режиме редактора
+                //check: did the user enter sudoku correctly in the editor mode
                 if (new Solver().isFieldValid(editorField)) {
                     editor.remove(backLevEd);
                     editor.remove(next);
@@ -408,7 +420,7 @@ public class App {
                 editor.repaint();
                 editor.revalidate();
             }
-            //проверка ответа пользователя
+            //check user's answer
             if (e.getSource() == answer) {
                 for (int i = 0; i < FIELD_SIZE; i++) {
                     for (int j = 0; j < FIELD_SIZE; j++) {
@@ -422,7 +434,7 @@ public class App {
                 us.setAnswer(userAnswer);
                 us.checkAnswer();
             }
-            //автоматическое решение
+            //auto solution
             if (e.getSource() == auto) {
                 int[][] gridInt = new int[FIELD_SIZE][FIELD_SIZE];
                 for (int i = 0; i < FIELD_SIZE; i++) {

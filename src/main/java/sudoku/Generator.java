@@ -1,5 +1,7 @@
 package sudoku;
 
+/**
+ * Class implements the sudoku creation algorithm */
 public class Generator {
 
     private int[][] field;
@@ -21,19 +23,22 @@ public class Generator {
         numbers = new int[FIELD_SIZE];
     }
 
-    //заполнение массива чисел от 1 до 9
+     /**
+     * Filling of the numbers' array from 1 to 9 */
     public void fillNumbersArr() {
         for(int i=0; i<FIELD_SIZE; i++) {
             numbers[i] = i+1;
         }
     }
 
-    //случайное число
     public int randomNumber(int min, int max) {
         return (int) (Math.random() * (max - min + 1) + min);
     }
 
-    /* сдвиг в массиве чисел влево на заданное число */
+    /**
+     * Shift in the numbers' array to the left by a given number
+     * @param lengthShift given number
+     * @return shifted array */
     public int[] shiftLeft(int lengthShift) {
         int[] tempArrEnd = new int[lengthShift];
         for(int i=0; i<lengthShift; i++) {
@@ -54,11 +59,12 @@ public class Generator {
         return numbers;
     }
 
-    /* создание базового поля:
-    * в соответствие с правилами судоку
-    * каждую строку сдвигаем на 3;
-    * при переходе в новый горизонатльный район,
-    * сдвигаем строку на 4*/
+    /**
+     * Creates basic field according to the rules of the game:
+     * we shift each row by 3,
+     * when we move to the next horizontal area (3 * 9)
+     * we shift row by 4
+     * @return basic sudoku field */
     public int[][] createBaseField() {
         fillNumbersArr();
         int counter = 0;
@@ -80,8 +86,9 @@ public class Generator {
         return field;
     }
 
-    /* 1ый метод для перемешивания поля:
-    * транспонирование матрицы */
+    /**
+     * Method for matrix mixing: matrix transposition
+     * @return transposed matrix */
     public int[][] transposeField() {
         for(int i=0; i<FIELD_SIZE; i++) {
             for(int j=i+1; j<FIELD_SIZE; j++) {
@@ -93,7 +100,10 @@ public class Generator {
         return field;
     }
 
-    //случайная строка или столбец; от 0 до 8 в зависимости от района
+    /**
+     * Method generates the number of random row or column depending on the district
+     * @param district the number of 3*9 field's section
+     * @return random row or column */
     public int randomRowOrColumn(int district) {
         int max = 8;
         int min = 0;
@@ -112,10 +122,10 @@ public class Generator {
         return (int) (Math.random() * (max - min + 1) + min);
     }
 
-    /* 2ой метод для перемешивания поля:
-    * обмен строк внутри горизонтального района*/
+    /**
+     * Swap of the rows within a horizontal district 3*9 */
     public void swapRowsInDistrict() {
-        int district = randomNumber(1, 3); //номера районов, получаем случайный
+        int district = randomNumber(1, 3);
         int row1 = randomRowOrColumn(district);
         int row2 = randomRowOrColumn(district);
 
@@ -126,10 +136,10 @@ public class Generator {
         }
     }
 
-    /* 3ий метод для перемешивания поля:
-     * обмен столбцов внутри вертикального района*/
+    /**
+     * Swap of the columns within a vertical district 3*9 */
     public void swapColumnsInDistrict() {
-        int district = randomNumber(1, 3); //номера районов, получаем случайный
+        int district = randomNumber(1, 3);
         int column1 = randomRowOrColumn(district);
         int column2 = randomRowOrColumn(district);
 
@@ -140,11 +150,13 @@ public class Generator {
         }
     }
 
-    //с какой строки начинать обмен районов
+    /**
+     * From which line to start the swap
+     * depending on the district number */
     public int checkDistrict(int district) {
         int p = -1;
-        if(district == 1) { //если 1 район
-            p = 0; //то начинаем с 0 строки
+        if(district == 1) {
+            p = 0;
         }
         if(district == 2) {
             p = 3;
@@ -155,8 +167,8 @@ public class Generator {
         return p;
     }
 
-    /* 4ый метод для перемешивания поля:
-     * обмен горизонтальных районов*/
+    /**
+     * Swap of the horizontal districts */
     public void swapHorizontalDistricts() {
         final int district1 = randomNumber(1, 3);
         final int district2 = randomNumber(1, 3);
@@ -176,8 +188,8 @@ public class Generator {
         }
     }
 
-    /* 5ый метод для перемешивания поля:
-     * обмен вертикальных районов*/
+    /**
+     * Swap of the vertical districts */
     public void swapVerticalDistricts() {
         final int district1 = randomNumber(1, 3);
         final int district2 = randomNumber(1, 3);
@@ -201,13 +213,15 @@ public class Generator {
         }
     }
 
-    //использование всех методов для перемешки поля в случайном порядке
+    /**
+     * Method uses all methods for mixing field in random order
+     * @param count the amount of field mixes */
     public void mixField(int count) {
-        int max = 5; //количество методов перемешки
+        int max = 5;
         int min = 1;
 
         for(int i=0; i<count; i++) {
-            int rn = randomNumber(min, max); //выбор метода
+            int rn = randomNumber(min, max);
             if(rn == 1) {
                 transposeField();
             }
@@ -226,16 +240,17 @@ public class Generator {
         }
     }
 
-    //копирование матриц
-    public void copyArray(int[][] copyArr, int[][]Arr) {
+    public void copyArray(int[][] copyArr, int[][]arr) {
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
-                copyArr[i][j] = Arr[i][j];
+                copyArr[i][j] = arr[i][j];
             }
         }
     }
 
-    //удаление клеток
+    /**
+     * Removes cells in the mixed sudoku field
+     * @return amount of removed cells */
     public int removeCells() {
         int min = 0;
         int max = 8;
@@ -243,9 +258,9 @@ public class Generator {
         int freeCells = new GameModes().getFreeCells();
         copyArray(copyField, field);
         for (int k = 0; k < freeCells; ) {
-            int i = randomNumber(min, max); //выбор случайной клетки
+            int i = randomNumber(min, max); //get random cell
             int j = randomNumber(min, max);
-            while (field[i][j] == 0) {//если клетка уже удалена, выбираем другую
+            while (field[i][j] == 0) { //if cell removed, get another cell
                 i = randomNumber(min, max);
                 j = randomNumber(min, max);
             }
@@ -253,17 +268,17 @@ public class Generator {
             int temp = field[i][j];
             field[i][j] = 0;
 
-            if (solver.isOneSolution(field)) { //удаляем клетку, если без нее
-                k++; //судоку будет иметь одно решение
+            if (solver.isOneSolution(field)) { //remove cell, if without that cell sudoku will have only one solution
+                k++;
                 copyField[i][j] = 0;
             }
             if (!solver.isOneSolution(field)) {
                 field[i][j] = temp;
             }
 
-            if (System.currentTimeMillis() - m > 1000) { //если выполнение программы превышает 1000 мс,
-                freeCells = new GameModes().getFreeCells(); //значит алгоритм не может удалить заданное количество клеток
-            }//выбирается новое значение количества пустых клеток
+            if (System.currentTimeMillis() - m > 1000) { //if the program execution exceeds > 1000 ms,
+                freeCells = new GameModes().getFreeCells(); //then algorithm can't remove given number of the cells
+            } //a new value of the free cells is selected
         }
 
         copyArray(field, copyField);

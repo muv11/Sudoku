@@ -2,7 +2,8 @@ package sudoku;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * Class that processes user's solution */
 public class UserSolution {
 
     private final int FIELD_SIZE = 9;
@@ -16,18 +17,25 @@ public class UserSolution {
         solver = new Solver();
     }
 
+    /**
+     * @param answer user's sudoku answer*/
     public void setAnswer(int[][] answer) {
-        this.answer = answer; //получаем ответ пользователя
+        this.answer = answer;
     }
 
+    /**
+     * @param field unsolved sudoku*/
     public void setField(int[][] field) {
-        this.field = field; //получаем нерешенное судоку
+        this.field = field;
     }
 
+    /**
+     * If the answer the same as the solution,
+     * then user wins, else he fails*/
     public void checkAnswer() {
-        solver.solveSudoku(field); //получаем решение судоку
+        solver.solveSudoku(field);
         Font font = new Font("Century Cothic",Font.BOLD , 20);
-        if (isArrSame()) {//если решение компьютера и пользователя сходятся, то победа
+        if (isArrSame()) {
             JFrame win = new JFrame("Победа");
             win.setBackground(Color.white);
             JTextField text = new JTextField("Поздравляю! Вы победили!");
@@ -49,7 +57,9 @@ public class UserSolution {
         }
     }
 
-    //проверка: сходятся ли решенное судоку и ответ пользователя
+    /**
+     * Method checks whether the user's answer the same as the solution of sudoku
+     * @return true if user's answer = solution */
     public boolean isArrSame() {
         int count = 0;
         for(int i=0; i<FIELD_SIZE; i++) {

@@ -4,6 +4,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
+/**
+ * Class checks that there are only numbers in the sudoku field*/
 public class DigitFilter extends DocumentFilter {
 
     private static final String DIGITS = "\\d+";

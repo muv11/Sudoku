@@ -1,5 +1,7 @@
 package sudoku;
 
+/**
+ * Class automatically solves sudoku*/
 public class AutoSolution {
 
     private final int FIELD_SIZE = 9;
@@ -14,9 +16,11 @@ public class AutoSolution {
     }
 
     public void setField(int[][] field) {
-        this.field = field; //получаем нерешенное судоку
+        this.field = field;
     }
 
+    /**
+     * @return solved sudoku*/
     public int[][] autoAnswer() {
         for (int i = 0; i < FIELD_SIZE; i++) {
             for (int j = 0; j < FIELD_SIZE; j++) {
@@ -24,7 +28,7 @@ public class AutoSolution {
             }
         }
         solver.solveSudoku(copyField);
-        return solver.getSolution(); //получаем решение судоку
+        return solver.getSolution();
     }
 
 }
